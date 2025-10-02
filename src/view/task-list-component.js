@@ -9,7 +9,6 @@ function createTaskListComponentTemplate(title) {
     <div class="task-column ${columnClass}">
       <h3>${title}</h3>
       <div class="task-list"></div>
-      ${title === 'Корзина' ? '<button class="clear-btn">Х Очистить</button>' : ''}
     </div>
   `;
 }
