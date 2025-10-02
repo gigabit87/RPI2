@@ -6,48 +6,17 @@
     <title>Игнатьев Алексей Андреевич</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <header>
-        <h1>Список задач</h1>
-    </header>
-    
-    <div class="container">
-        <section class="add-section">
-            <div class="add-task">
-                <input type="text" placeholder="Новая задача">
-                <button>+ Добавить</button>
-            </div>
-        </section>
+<body class="board-app">
+    <main class="board-app__main">
+        <div class="board-app__inner">
+            <section class="add-task">
 
-        <section class="tasks-section">
-            <div class="task-board">
-                <div class="task-column backlog-column">
-                    <h3>Бэклог</h3>
-                    <div class="task">Выучить JS</div>
-                    <div class="task">Выучить React</div>
-                    <div class="task">Сделать домашку</div>
-                </div>
-                
-                <div class="task-column progress-column">
-                    <h3>В процессе</h3>
-                    <div class="task">Выпить смузи</div>
-                    <div class="task">Попить воды</div>
-                </div>
-                
-                <div class="task-column done-column">
-                    <h3>Готово</h3>
-                    <div class="task">Позвонить маме</div>
-                    <div class="task">Погладить кота</div>
-                </div>
-                
-                <div class="task-column trash-column">
-                    <h3>Корзина</h3>
-                    <div class="task">Сходить погулять</div>
-                    <div class="task">Прочитать Войну и Мир</div>
-                    <button class="clear-btn">Х Очистить</button>
-                </div>
-            </div>
-        </section>
-    </div>
+            </section>
+            <section class="taskboard">
+
+            </section>
+        </div>
+    </main>
+    <script src="./src/main.js" type="module"></script>
 </body>
 </html>

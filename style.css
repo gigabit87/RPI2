@@ -159,3 +159,17 @@ header {
     border-top: 4px solid #ef4444;
 }
 
+.task-board {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.task-column {
+  flex: 1;
+  min-width: 200px;
+  background: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+}
+
