@@ -4,6 +4,7 @@ import TaskComponent from "../view/task-component.js";
 import ClearButtonComponent from "../view/clear-button-component.js";
 import EmptyListComponent from "../view/empty-list-component.js";
 import { render } from "../framework/render.js";
+import { generateID } from "../utils.js";
 
 export default class TasksBoardPresenter {
   #boardContainer = null;
@@ -14,16 +15,25 @@ export default class TasksBoardPresenter {
     this.#boardContainer = boardContainer;
     this.#taskModel = taskModel;
     this.#taskBoardComponent = new TaskBoardComponent();
+    
+    this.#taskModel.addObserver(this.#handleModelChange.bind(this));
+  }
+
+  get tasks() {
+    return this.#taskModel.tasks;
   }
 
   init() {
     render(this.#taskBoardComponent, this.#boardContainer);
+    this.#renderBoard();
+  }
 
-    const boardTasks = this.#taskModel.tasks;
+  #renderBoard() {
+    const boardTasks = this.tasks;
 
     const columns = {
       backlog: "Бэклог",
-      progress: "В процессе",
+      progress: "В процессе", 
       done: "Готово",
       trash: "Корзина",
     };
@@ -41,7 +51,8 @@ export default class TasksBoardPresenter {
     const filteredTasks = allTasks.filter((task) => task.status === status);
 
     if (filteredTasks.length === 0) {
-      this.#renderEmptyList(listContainer);
+      const message = status === "trash" ? "Перетащите карточку" : "Нет задач";
+      this.#renderEmptyList(listContainer, message);
     } else {
       filteredTasks.forEach((task) => this.#renderTask(task, listContainer));
     }
@@ -56,10 +67,32 @@ export default class TasksBoardPresenter {
   }
 
   #renderClearButton(container) {
-    render(new ClearButtonComponent(), container);
+    const clearButtonComponent = new ClearButtonComponent();
+    clearButtonComponent.setClearClickHandler(() => {
+      this.#taskModel.clearTrash();
+    });
+    render(clearButtonComponent, container);
   }
 
-  #renderEmptyList(container) {
-    render(new EmptyListComponent(), container);
+  #renderEmptyList(container, message = "Нет задач") {
+    render(new EmptyListComponent(message), container);
+  }
+
+  #handleModelChange = () => {
+    this.#clearBoard();
+    this.#renderBoard();
+  }
+
+  #clearBoard() {
+  this.#taskBoardComponent.element.innerHTML = '';
+  }
+
+  handleFormSubmit = (taskText) => {
+    const newTask = {
+      id: generateID(),
+      title: taskText,
+      status: 'backlog'
+    };
+    this.#taskModel.addTask(newTask);
   }
 }

@@ -2,7 +2,7 @@ import { AbstractComponent } from "./view/abstract-component.js";
 
 const RenderPosition = {
   BEFOREBEGIN: "beforebegin",
-  AFTERBEGIN: "afterbegin",
+  AFTERBEGIN: "afterbegin", 
   BEFOREEND: "beforeend",
   AFTEREND: "afterend",
 };
@@ -19,7 +19,7 @@ function render(component, container, place = RenderPosition.BEFOREEND) {
   }
 
   if (container === null) {
-    throw new Error("Container element doesn’t exist");
+    throw new Error("Container element doesn't exist");
   }
 
   container.insertAdjacentElement(place, component.element);
