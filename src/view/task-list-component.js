@@ -30,16 +30,10 @@ export default class TaskListComponent extends AbstractComponent {
     
     taskList.addEventListener('dragover', (evt) => {
       evt.preventDefault();
-      taskList.classList.add('drag-over');
-    });
-
-    taskList.addEventListener('dragleave', () => {
-      taskList.classList.remove('drag-over');
     });
 
     taskList.addEventListener('drop', (evt) => {
       evt.preventDefault();
-      taskList.classList.remove('drag-over');
       const taskId = evt.dataTransfer.getData('text/plain');
       callback(taskId, this.#status);
     });

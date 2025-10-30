@@ -4,7 +4,7 @@ import TaskComponent from "../view/task-component.js";
 import ClearButtonComponent from "../view/clear-button-component.js";
 import EmptyListComponent from "../view/empty-list-component.js";
 import { render } from "../framework/render.js";
-import { generateID } from "../utils.js";
+import { UserAction, UpdateType } from "../const.js";
 
 export default class TasksBoardPresenter {
   #boardContainer = null;
@@ -16,25 +16,45 @@ export default class TasksBoardPresenter {
     this.#taskModel = taskModel;
     this.#taskBoardComponent = new TaskBoardComponent();
     
-    this.#taskModel.addObserver(this.#handleModelChange.bind(this));
+    this.#taskModel.addObserver(this.#handleModelEvent.bind(this));
   }
 
   get tasks() {
     return this.#taskModel.tasks;
   }
 
-  init() {
-    render(this.#taskBoardComponent, this.#boardContainer);
-    this.#renderBoard();
+  async init() {
+    await this.#taskModel.init();
+  }
+
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.INIT:
+        this.#clearBoard();
+        this.#renderBoard();
+        break;
+      case UserAction.ADD_TASK:
+      case UserAction.UPDATE_TASK:
+      case UserAction.DELETE_TASK:
+        this.#clearBoard();
+        this.#renderBoard();
+        break;
+    }
+  }
+
+  #clearBoard() {
+    this.#taskBoardComponent.element.innerHTML = '';
   }
 
   #renderBoard() {
+    render(this.#taskBoardComponent, this.#boardContainer);
+
     const boardTasks = this.tasks;
 
     const columns = {
       backlog: "Бэклог",
       progress: "В процессе", 
-      done: "Готовo",
+      done: "Готово",
       trash: "Корзина",
     };
 
@@ -60,6 +80,7 @@ export default class TasksBoardPresenter {
     if (status === "trash") {
       this.#renderClearButton(taskListComponent.element);
     }
+
     taskListComponent.setDropHandler(this.#handleTaskDrop.bind(this));
   }
 
@@ -73,9 +94,7 @@ export default class TasksBoardPresenter {
 
   #renderClearButton(container) {
     const clearButtonComponent = new ClearButtonComponent();
-    clearButtonComponent.setClearClickHandler(() => {
-      this.#taskModel.clearTrash();
-    });
+    clearButtonComponent.setClearClickHandler(this.#handleClearTrash.bind(this));
     render(clearButtonComponent, container);
   }
 
@@ -83,25 +102,27 @@ export default class TasksBoardPresenter {
     render(new EmptyListComponent(message), container);
   }
 
-  #handleModelChange = () => {
-    this.#clearBoard();
-    this.#renderBoard();
+  handleFormSubmit = async (taskText) => {
+    try {
+      await this.#taskModel.addTask(taskText);
+    } catch(err) {
+      console.error('Ошибка:', err);
+    }
   }
 
-  #clearBoard() {
-    this.#taskBoardComponent.element.innerHTML = '';
+  #handleTaskDrop = async (taskId, newStatus) => {
+    try {
+      await this.#taskModel.updateTaskStatus(taskId, newStatus);
+    } catch(err) {
+      console.error('Ошибка:', err);
+    }
   }
 
-  handleFormSubmit = (taskText) => {
-    const newTask = {
-      id: generateID(),
-      title: taskText,
-      status: 'backlog'
-    };
-    this.#taskModel.addTask(newTask);
-  }
-
-  #handleTaskDrop = (taskId, newStatus) => {
-    this.#taskModel.updateTaskStatus(taskId, newStatus);
+  #handleClearTrash = async () => {
+    try {
+      await this.#taskModel.clearTrash();
+    } catch(err) {
+      console.error('Ошибка:', err);
+    }
   }
 }

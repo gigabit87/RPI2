@@ -4,13 +4,14 @@ import { render, RenderPosition } from "./framework/render.js";
 
 import TasksBoardPresenter from "./presenter/tasks-board-presenter.js";
 import TaskModel from "./model/task-model.js";
-import { tasks } from "./mock/task.js";
+import TasksApiService from "./tasks-api-service.js";
 
 const bodyContainer = document.body;
 const formContainer = document.querySelector('.add-task');
 const taskboardContainer = document.querySelector('.taskboard');
 
-const taskModel = new TaskModel(tasks);
+const tasksApiService = new TasksApiService('https://6903b1f4d0f10a340b255dab.mockapi.io');
+const taskModel = new TaskModel({ tasksApiService });
 
 render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
 

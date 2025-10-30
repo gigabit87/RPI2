@@ -2,7 +2,7 @@ import { AbstractComponent } from "./view/abstract-component.js";
 
 const RenderPosition = {
   BEFOREBEGIN: "beforebegin",
-  AFTERBEGIN: "afterbegin", 
+  AFTERBEGIN: "afterbegin",
   BEFOREEND: "beforeend",
   AFTEREND: "afterend",
 };

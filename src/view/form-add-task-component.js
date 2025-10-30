@@ -8,7 +8,7 @@ export default class FormAddTaskComponent extends AbstractComponent {
 
   get template() {
     return `
-      <div class="add-task">
+      <div class="add-task__form">
         <input type="text" placeholder="Новая задача">
         <button type="button">+ Добавить</button>
       </div>
