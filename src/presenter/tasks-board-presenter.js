@@ -34,7 +34,7 @@ export default class TasksBoardPresenter {
     const columns = {
       backlog: "Бэклог",
       progress: "В процессе", 
-      done: "Готово",
+      done: "Готовo",
       trash: "Корзина",
     };
 
@@ -44,7 +44,7 @@ export default class TasksBoardPresenter {
   }
 
   #renderTasksList(status, title, allTasks) {
-    const taskListComponent = new TaskListComponent(title);
+    const taskListComponent = new TaskListComponent(title, status);
     render(taskListComponent, this.#taskBoardComponent.element);
 
     const listContainer = taskListComponent.element.querySelector(".task-list");
@@ -60,10 +60,15 @@ export default class TasksBoardPresenter {
     if (status === "trash") {
       this.#renderClearButton(taskListComponent.element);
     }
+    taskListComponent.setDropHandler(this.#handleTaskDrop.bind(this));
   }
 
   #renderTask(task, container) {
-    render(new TaskComponent(task.title), container);
+    const taskComponent = new TaskComponent(task);
+    taskComponent.setDragStartHandler(() => {
+      taskComponent.element.classList.add('dragging');
+    });
+    render(taskComponent, container);
   }
 
   #renderClearButton(container) {
@@ -84,7 +89,7 @@ export default class TasksBoardPresenter {
   }
 
   #clearBoard() {
-  this.#taskBoardComponent.element.innerHTML = '';
+    this.#taskBoardComponent.element.innerHTML = '';
   }
 
   handleFormSubmit = (taskText) => {
@@ -94,5 +99,9 @@ export default class TasksBoardPresenter {
       status: 'backlog'
     };
     this.#taskModel.addTask(newTask);
+  }
+
+  #handleTaskDrop = (taskId, newStatus) => {
+    this.#taskModel.updateTaskStatus(taskId, newStatus);
   }
 }

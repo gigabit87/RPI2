@@ -219,3 +219,31 @@ header {
     box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
     transform: translateY(-2px);
 }
+
+.task {
+  background-color: white;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s;
+  word-break: break-word;
+  cursor: grab;
+  user-select: none;
+}
+
+.task:active {
+  cursor: grabbing;
+}
+
+.task-list.drag-over {
+  background-color: #f0f9ff;
+  border: 2px dashed #3b82f6;
+  border-radius: 8px;
+  min-height: 100px;
+}
+
+.task-list {
+  min-height: 200px;
+  transition: all 0.3s;
+}
